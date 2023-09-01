@@ -19,11 +19,6 @@ public class QuestionManager {
         try {
             String url = "jdbc:mysql://localhost:3306/" + database + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
             connection = DriverManager.getConnection(url, user, password);
-//            if (connection != null) {
-//                System.out.println("Połączono z bazą danych pomyślnie!");
-//            } else {
-//                System.out.println("Nie udało się połączyć z bazą danych.");
-//            }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Błąd podczas łączenia z bazą danych: " + e.getMessage());

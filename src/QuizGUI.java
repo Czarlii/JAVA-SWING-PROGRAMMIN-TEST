@@ -492,7 +492,7 @@ public class QuizGUI {
         }
         frame.dispose();
 
-        new QuizGUI();
+         new QuizGUI();
     }
 
     private void saveScore(String username, int score) {
