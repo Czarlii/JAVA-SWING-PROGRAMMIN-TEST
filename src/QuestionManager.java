@@ -95,29 +95,6 @@ public class QuestionManager {
         }
     }
 
-    public Question getRandomQuestion() {
-        // Pobierz losowe pytanie z bazy danych
-        String query = "SELECT * FROM questions ORDER BY RAND() LIMIT 1";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String questionText = resultSet.getString("question");
-                String[] answers = {
-                        resultSet.getString("answer1"),
-                        resultSet.getString("answer2"),
-                        resultSet.getString("answer3"),
-                        resultSet.getString("answer4")
-                };
-                int correctAnswer = resultSet.getInt("correct_answer");
-                return new Question(id, questionText, answers, correctAnswer);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     public List<Question> getRandomQuestions(int count) {
         List<Question> randomQuestions = new ArrayList<>();
@@ -147,30 +124,6 @@ public class QuestionManager {
     }
 
 
-    public Question getQuestion(int id) {
-        // Pobierz pytanie o konkretnym ID
-        String query = "SELECT * FROM questions WHERE id = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                String questionText = resultSet.getString("question");
-                String[] answers = {
-                        resultSet.getString("answer1"),
-                        resultSet.getString("answer2"),
-                        resultSet.getString("answer3"),
-                        resultSet.getString("answer4")
-                };
-                int correctAnswer = resultSet.getInt("correct_answer");
-                return new Question(id, questionText, answers, correctAnswer);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public void addQuestion(Question question) {
         // Dodaj pytanie do bazy danych
         String query = "INSERT INTO questions (question, answer1, answer2, answer3, answer4, correct_answer) VALUES (?, ?, ?, ?, ?, ?)";
@@ -188,30 +141,18 @@ public class QuestionManager {
         }
     }
 
-    public void saveScore(String username, int score) {
-        String query = "INSERT INTO scores (username, score) VALUES (?, ?)";
+    public void closeConnection() {
         try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, username);
-            statement.setInt(2, score);
-            statement.executeUpdate();
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Błąd podczas zamykania połączenia z bazą danych: " + e.getMessage());
         }
     }
 
     public Connection getConnection() {
         return connection;
-    }
-
-
-    public void closeConnection() {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }

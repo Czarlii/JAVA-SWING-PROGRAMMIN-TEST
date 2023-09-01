@@ -33,10 +33,6 @@ public class Question {
         this.question = question;
     }
 
-    public void setAnswers(String[] answers) {
-        this.answers = answers;
-    }
-
     public void setCorrectAnswer(int correctAnswer) {
         this.correctAnswer = correctAnswer;
     }

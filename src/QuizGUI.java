@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.ResultSet;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class QuizGUI {
     private JFrame frame;
@@ -49,6 +51,13 @@ public class QuizGUI {
         editQuestionButton = createButton("Edytuj Pytanie", this::editQuestion);
         showScoresButton = createButton("Wyświetl wyniki", this::showScores);
         deleteScoresButton = createButton("Usuń dotychczasowe wyniki", this::deleteScores);
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                questionManager.closeConnection();
+            }
+        });
 
         displayWelcomeScreen();
         frame.setVisible(true);
@@ -169,6 +178,11 @@ public class QuizGUI {
     }
 
     private void nextQuestion(ActionEvent e) {
+        // Sprawdź, czy użytkownik wybrał odpowiedź
+        if (buttonGroup.getSelection() == null) {
+            JOptionPane.showMessageDialog(frame, "Proszę wybrać odpowiedź przed przejściem do następnego pytania.");
+            return;
+        }
         // Sprawdź odpowiedź użytkownika
         for (int i = 0; i < 4; i++) {
             if (answerButtons[i].isSelected() && i == questions.get(currentQuestionIndex).getCorrectAnswer() - 1) {
